@@ -2,16 +2,19 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 
 import "./App.css";
-import { FirstDisplayPage } from "./Components";
+import { FirstDisplayPage, IntroPage } from "./Components";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [introPage, setIntroPage] = useState(<FirstDisplayPage />);
+  setTimeout(() => {
+    setIntroPage(<IntroPage />);
+  }, "5000");
 
   return (
     <>
       <Routes>
-        <Route index path="/" element={<FirstDisplayPage />} />
+        <Route index path="/" element={introPage} />
       </Routes>
     </>
   );
