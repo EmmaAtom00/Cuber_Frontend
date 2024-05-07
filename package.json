@@ -1,0 +1,14 @@
+{
+  "name": "cuber_frontend",
+  "version": "1.0.0",
+  "description": "Frontend development for a digital carpooling platform using knn algorithm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Olarewaju emmanuel",
+  "license": "ISC",
+  "dependencies": {
+    "yup": "^1.4.0"
+  }
+}

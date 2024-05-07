@@ -6,6 +6,7 @@ export default {
       colors: {
         bl: "#28374B",
         gr: "#11C158",
+        gre: "#9C9A9A",
       },
     },
   },

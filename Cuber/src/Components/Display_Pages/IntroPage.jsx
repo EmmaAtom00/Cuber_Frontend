@@ -15,11 +15,11 @@ function IntroPage() {
           of your Home
         </p>
         <div className="text-center text-white flex flex-col gap-6">
-          <Link>
-            <button className="bg-gr rounded-md py-4 w-40">Login</button>
+          <Link to={"/Login"}>
+            <button className="bg-gr rounded-md py-4 w-56">Login</button>
           </Link>
-          <Link>
-            <button className="bg-gr rounded-md py-4 w-40">Sign up</button>
+          <Link to={"/SignUp"}>
+            <button className="bg-gr rounded-md py-4 w-56">Sign up</button>
           </Link>
         </div>
       </div>
