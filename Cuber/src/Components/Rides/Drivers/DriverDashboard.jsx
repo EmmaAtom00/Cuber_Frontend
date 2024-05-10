@@ -8,6 +8,16 @@ import man from "../../../assets/man.png";
 import man1 from "../../../assets/man1.png";
 
 function DriverDashboard({ setMode }) {
+  const news = [
+    {
+      name: "Johnson Abraham",
+      start: "Obantoko",
+      destination: "Camp",
+      img: man,
+    },
+    { name: "Paul Yussuf", start: "Obantoko", destination: "Camp", img: man1 },
+  ];
+
   return (
     <div className="p-[2em]">
       <div className="flex justify-between">
@@ -24,11 +34,34 @@ function DriverDashboard({ setMode }) {
       <h2 className="text-gr mt-14 text-xl font-semibold">
         Welcome back <small className="text-sm text-bl">Abraham</small>
       </h2>
+
       <div className="bg-[#E9E9E9] p-6 rounded-md my-4">
         <p className="text-[#28374B] font-thin">
-          <u>Tools</u>
+          <u>Latest news</u>
         </p>
+        <div className="gap-4 grid mt-3">
+          {news.map(({ name, start, destination, img }, id) => {
+            return (
+              <div
+                key={id}
+                className="flex items-center shadow-xl bg-white rounded-lg p-6 gap-6">
+                <img src={img} alt="" className="w-14" />
+                <div className="flex flex-col">
+                  <p>{name}</p>
+                  <b>Trip</b>
+                  <i>
+                    <small>
+                      {start} - {destination}
+                    </small>
+                  </i>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p className="text-gr underline text-right mt-4">View all</p>
       </div>
+
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <IoChatbubbleEllipsesOutline size={25} />

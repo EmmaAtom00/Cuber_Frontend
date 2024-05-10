@@ -8,7 +8,7 @@ import man from "../../assets/man.png";
 import man1 from "../../assets/man1.png";
 
 function Dashboard({ setMode }) {
-  const Sponsored = [
+  const news = [
     {
       name: "Johnson Abraham",
       start: "Obantoko",
@@ -35,10 +35,10 @@ function Dashboard({ setMode }) {
       </h2>
       <div className="bg-[#E9E9E9] p-6 rounded-md my-4">
         <p className="text-[#28374B] font-thin">
-          <u>Sponsored</u>
+          <u>Latest news</u>
         </p>
         <div className="gap-4 grid mt-3">
-          {Sponsored.map(({ name, start, destination, img }, id) => {
+          {news.map(({ name, start, destination, img }, id) => {
             return (
               <div
                 key={id}
@@ -59,11 +59,11 @@ function Dashboard({ setMode }) {
         </div>
         <p className="text-gr underline text-right mt-4">View all</p>
       </div>
-      <div className="flex justify-between">
-        <div className="flex gap-2 items-center">
+      <div className="flex justify-end">
+        {/* <div className="flex gap-2 items-center">
           <IoChatbubbleEllipsesOutline size={25} />
           <p>Inbox</p>
-        </div>
+        </div> */}
         <div className="flex gap-2 items-center">
           <GoHistory size={25} />
           <p>History</p>
