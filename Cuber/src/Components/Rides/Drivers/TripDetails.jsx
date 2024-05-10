@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
-function SelectLocation() {
+function TripDetails() {
   const [location, SelectLocation] = useState(null);
   const navigate = useNavigate();
   const formik = useFormik({
@@ -22,7 +22,7 @@ function SelectLocation() {
     }),
     onSubmit: (values) => {
       console.log(values);
-      navigate("/Choose-a-ride");
+      navigate("/Complete-driver-trip-details");
     },
   });
 
@@ -44,6 +44,9 @@ function SelectLocation() {
           <Link to={-1} className="absolute left-0 top-0">
             <IoIosArrowRoundBack size={30} />
           </Link>
+          <p className="absolute bg-white rounded-md top-12 shadow py-3 px-6">
+            Please input your trip details
+          </p>
         </div>
       </div>
       {/* Google map */}
@@ -60,7 +63,7 @@ function SelectLocation() {
               <MdMyLocation color="white" size={25} />
             </div>
             <div className="flex flex-col">
-              <p className="">Pick up location</p>
+              <p className="">Your current location</p>
               <input
                 type="text"
                 name="pickup"
@@ -90,7 +93,7 @@ function SelectLocation() {
               <CiLocationOn color="white" size={25} />
             </div>
             <div className="flex flex-col">
-              <p className="">Pick up location</p>
+              <p className="">Destination</p>
               <input
                 type="text"
                 name="destination"
@@ -118,10 +121,10 @@ function SelectLocation() {
           type="submit"
           onClick={formik.handleSubmit}
           className="bg-gr text-white py-3 rounded-md mt-8 w-[60%] mx-auto">
-          Find a ride
+          Proceed
         </button>
       </div>
     </div>
   );
 }
-export default SelectLocation;
+export default TripDetails;

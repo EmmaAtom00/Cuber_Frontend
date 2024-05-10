@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 
 import "./App.css";
@@ -7,7 +7,20 @@ import { BiError } from "react-icons/bi";
 import { Route, Routes } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Dashboard, Profile } from "./Components/Dashboard";
-import { ChooseDriver, SelectLocation } from "./Components/Rides/Passengers";
+import {
+  ChooseDriver,
+  DriverDetail,
+  PassengerRequestSuccessPage,
+  SelectLocation,
+} from "./Components/Rides/Passengers";
+import {
+  CompleteDetails,
+  CompleteTripDetails,
+  DriverDashboard,
+  PendingApproval,
+  Submitted,
+  TripDetails,
+} from "./Components/Rides/Drivers";
 
 function App() {
   const [introPage, setIntroPage] = useState(<FirstDisplayPage />);
@@ -16,6 +29,7 @@ function App() {
   }, "5000");
 
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const [mode, setMode] = useState("passenger");
 
   return (
     <>
@@ -24,10 +38,36 @@ function App() {
           <Route index path="/" element={introPage} />
           <Route path="/Login" element={<Login />} />
           <Route path="/SignUp" element={<SignUp />} />
-          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route
+            path="/Dashboard"
+            element={
+              mode == "passenger" ? (
+                <Dashboard setMode={setMode} />
+              ) : (
+                <DriverDashboard setMode={setMode} />
+              )
+            }
+          />
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Find-a-ride" element={<SelectLocation />} />
           <Route path="/Choose-a-ride" element={<ChooseDriver />} />
+          <Route path="/Driver-details" element={<DriverDetail />} />
+          <Route path="/Driver-dashboard" element={<DriverDashboard />} />
+          <Route path="/Pending-approval" element={<PendingApproval />} />
+          <Route path="/Driver-trip-details" element={<TripDetails />} />
+          <Route path="/Trip-created" element={<Submitted />} />
+          <Route
+            path="/Complete-driver-trip-details"
+            element={<CompleteTripDetails />}
+          />
+          <Route
+            path="/Complete-driver-details"
+            element={<CompleteDetails />}
+          />
+          <Route
+            path="/Passenger-Request-Success"
+            element={<PassengerRequestSuccessPage />}
+          />
         </Routes>
       ) : (
         <div className="w-full bg-slate-200">
