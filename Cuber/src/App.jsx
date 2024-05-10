@@ -21,6 +21,13 @@ import {
   Submitted,
   TripDetails,
 } from "./Components/Rides/Drivers";
+import {
+  Accept,
+  AcceptMessage,
+  NewRequest,
+  Reject,
+  RejectMessage,
+} from "./Components/Inbox";
 
 function App() {
   const [introPage, setIntroPage] = useState(<FirstDisplayPage />);
@@ -56,6 +63,11 @@ function App() {
           <Route path="/Pending-approval" element={<PendingApproval />} />
           <Route path="/Driver-trip-details" element={<TripDetails />} />
           <Route path="/Trip-created" element={<Submitted />} />
+          <Route path="/Passenger-request" element={<NewRequest />} />
+          <Route path="/Accept-request" element={<Accept />} />
+          <Route path="/Accept" element={<AcceptMessage />} />
+          <Route path="/Reject" element={<RejectMessage />} />
+          <Route path="/Reject-request" element={<Reject />} />
           <Route
             path="/Complete-driver-trip-details"
             element={<CompleteTripDetails />}

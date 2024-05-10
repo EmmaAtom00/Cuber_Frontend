@@ -4,3 +4,4 @@ export { default as Login } from "./Auth/Login";
 export { default as SignUp } from "./Auth/SignUp";
 export { default as Navigation } from "./Navigation";
 export { default as Success } from "./Success";
+export { default as Option } from "./Option";
