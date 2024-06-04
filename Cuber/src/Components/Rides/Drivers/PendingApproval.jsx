@@ -14,7 +14,7 @@ function PendingApproval() {
         img={<MdOutlineNotificationImportant color="white" size={90} />}
         message={"Your details has been received and is being processed"}
       />
-      {setTimeout(() => setPending(true), "7000")}
+      {setTimeout(() => setPending(true), "4000")}
     </div>
   );
 }

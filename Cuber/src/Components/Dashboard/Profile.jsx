@@ -49,12 +49,14 @@ function Profile() {
           </div>
           <IoIosArrowForward size={20} />
         </div>
-        <div className="flex items-center cursor-pointer justify-between w-[75%]">
+        <Link
+          to={"/logout"}
+          className="flex items-center cursor-pointer justify-between w-[75%]">
           <div className="flex items-center gap-4">
             <IoIosLogOut size={30} color="red" />
             <p className="font-thin">Logout</p>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

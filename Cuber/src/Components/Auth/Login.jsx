@@ -1,14 +1,20 @@
 import { useFormik } from "formik";
 import cuberLogo from "/logo.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import axios from "axios";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
+  const [nav, setNav] = useState(false);
+  const url = import.meta.env.VITE_URL;
   const navigate = useNavigate();
+
   const form = useFormik({
     initialValues: {
       email: "",
@@ -19,8 +25,39 @@ function Login() {
       password: Yup.string().required().min(6, "Minimum character is 6"),
     }),
     onSubmit: async (values) => {
-      await console.log(values);
-      navigate("/Dashboard");
+      await axios
+        .post(`${url}/auth/login`, {
+          email: values.email,
+          password: values.password,
+        })
+        .then(async (res) => {
+          await toast.success(res.data.msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Flip,
+          });
+          localStorage.setItem("token", res.data.token);
+          setTimeout(() => setNav(true), "2000");
+        })
+        .catch(async (err) => {
+          await toast.error(err.response.data.msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Flip,
+          });
+        });
     },
   });
   const [password, setPassword] = useState("password");
@@ -31,8 +68,10 @@ function Login() {
       setPassword("password");
     }
   };
+  if (nav) return <Navigate to={"/dashboard"} />;
   return (
     <div className="p-[2em]">
+      <ToastContainer />
       <div className="flex flex-col  items-center justify-center">
         <Link to={"/"}>
           <img src={cuberLogo} alt="Cuber logo" />

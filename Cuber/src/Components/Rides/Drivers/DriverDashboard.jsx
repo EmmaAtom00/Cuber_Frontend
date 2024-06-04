@@ -6,8 +6,46 @@ import { GoHistory } from "react-icons/go";
 import { Link } from "react-router-dom";
 import man from "../../../assets/man.png";
 import man1 from "../../../assets/man1.png";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-function DriverDashboard({ setMode }) {
+function DriverDashboard() {
+  const url = import.meta.env.VITE_URL;
+  const [user, setUser] = useState({});
+  const [error, setError] = useState();
+  const config = {
+    headers: {
+      "content-Type": "application/json",
+      authorization: localStorage.getItem("token"),
+    },
+  };
+  useEffect(() => {
+    const getUser = async () => {
+      await axios
+        .get(`${url}/user/dashboard`, config)
+        .then((res) => {
+          setUser(res.data.data);
+        })
+        .catch((err) => {
+          setError(err.response.status);
+        });
+    };
+    getUser();
+  }, []);
+  async function changeMode() {
+    axios
+      .get(`${url}/user/switch`, {
+        headers: {
+          "content-Type": "application/json",
+          authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        // mode = res.response.driver;
+      })
+      .catch((err) => {});
+    window.location.reload(false);
+  }
   const news = [
     {
       name: "Johnson Abraham",
@@ -32,7 +70,7 @@ function DriverDashboard({ setMode }) {
         </div>
       </div>
       <h2 className="text-gr mt-14 text-xl font-semibold">
-        Welcome back <small className="text-sm text-bl">Abraham</small>
+        Welcome back <small className="text-sm text-bl">{user.firstName}</small>
       </h2>
 
       <div className="bg-[#E9E9E9] p-6 rounded-md my-4">
@@ -79,7 +117,7 @@ function DriverDashboard({ setMode }) {
           </button>
         </Link>
         <button
-          onClick={() => setMode("passenger")}
+          onClick={() => changeMode()}
           className="bg-gr text-white py-4 px-20 rounded-lg">
           Switch to a Passenger
         </button>

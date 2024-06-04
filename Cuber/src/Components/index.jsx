@@ -5,3 +5,6 @@ export { default as SignUp } from "./Auth/SignUp";
 export { default as Navigation } from "./Navigation";
 export { default as Success } from "./Success";
 export { default as Option } from "./Option";
+export { default as Protected } from "./Protected";
+export { default as NotFound } from "./notFound";
+export { default as AnimatePage } from "./AnimatePage";

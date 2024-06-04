@@ -13,7 +13,7 @@ function Submitted() {
         message={"Success"}
         extra={"Please check your inbox for new request"}
       />
-      {setTimeout(() => setRedirect(true), "5000")}
+      {setTimeout(() => setRedirect(true), "3000")}
     </div>
   );
 }

@@ -1,13 +1,54 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoWalletOutline } from "react-icons/io5";
 import { CiUser } from "react-icons/ci";
-import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { GoHistory } from "react-icons/go";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import man from "../../assets/man.png";
 import man1 from "../../assets/man1.png";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-function Dashboard({ setMode }) {
+function Dashboard() {
+  const url = import.meta.env.VITE_URL;
+  const [user, setUser] = useState({});
+  const [error, setError] = useState();
+  const config = {
+    headers: {
+      "content-Type": "application/json",
+      authorization: localStorage.getItem("token"),
+    },
+  };
+  useEffect(() => {
+    const getUser = async () => {
+      await axios
+        .get(`${url}/user/dashboard`, config)
+        .then((res) => {
+          setUser(res.data.data);
+        })
+        .catch((err) => {
+          setError(err.response.status);
+        });
+    };
+    getUser();
+  }, []);
+  async function changeMode() {
+    axios
+      .get(`http://localhost:4000/user/switch`, {
+        headers: {
+          "content-Type": "application/json",
+          authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        // mode = res.response.driver;
+        // console.log(res.data.msg);
+        // mode = res.data.driver;
+      })
+      .catch((err) => {
+        // console.log(err.response.data.msg);
+      });
+    window.location.reload(false);
+  }
   const news = [
     {
       name: "Johnson Abraham",
@@ -17,6 +58,8 @@ function Dashboard({ setMode }) {
     },
     { name: "Paul Yussuf", start: "Obantoko", destination: "Camp", img: man1 },
   ];
+  if (error) return <Navigate to={"/login"} />;
+
   return (
     <div className="p-[2em]">
       <div className="flex justify-between">
@@ -31,7 +74,7 @@ function Dashboard({ setMode }) {
         </div>
       </div>
       <h2 className="text-gr mt-14 text-xl font-semibold">
-        Welcome back <small className="text-sm text-bl">Abraham</small>
+        Welcome back <small className="text-sm text-bl">{user.firstName}</small>
       </h2>
       <div className="bg-[#E9E9E9] p-6 rounded-md my-4">
         <p className="text-[#28374B] font-thin">
@@ -76,7 +119,7 @@ function Dashboard({ setMode }) {
           </button>
         </Link>
         <button
-          onClick={() => setMode("Driver")}
+          onClick={() => changeMode()}
           className="bg-gr text-white py-4 px-20 rounded-lg">
           Switch to a driver
         </button>

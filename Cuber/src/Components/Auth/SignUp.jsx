@@ -1,30 +1,69 @@
 import { useFormik } from "formik";
 import cuberLogo from "/logo.svg";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import axios, { AxiosError } from "axios";
+import { Bounce, Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignUp() {
+  const navigate = useNavigate();
+  const [nav, setNav] = useState(false);
   const form = useFormik({
     initialValues: {
       email: "",
       password: "",
-      firstname: "",
-      lastname: "",
+      firstName: "",
+      lastName: "",
     },
     validationSchema: Yup.object({
       email: Yup.string().email().required(),
       password: Yup.string().required().min(6, "Minimum character is 6"),
-      firstname: Yup.string().required(),
-      lastname: Yup.string().required(),
+      firstName: Yup.string().required(),
+      lastName: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      await console.log(values);
+      const request = await axios
+        .post("http://localhost:4000/auth/signup", {
+          email: values.email,
+          password: values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+        })
+        .then(async (res) => {
+          await toast.success(res.data.msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Flip,
+          });
+          localStorage.setItem("token", res.data.token);
+          setTimeout(() => setNav(true), "4000");
+        })
+        .catch(async (err) => {
+          await toast.error(err.response.data.msg, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Flip,
+          });
+        });
     },
   });
+
   const [password, setPassword] = useState("password");
   const pss = () => {
     if (password == "password") {
@@ -33,8 +72,10 @@ function SignUp() {
       setPassword("password");
     }
   };
+  if (nav) return <Navigate to={"/dashboard"} />;
   return (
     <div className="p-[2em]">
+      <ToastContainer />
       <div className="flex flex-col  items-center justify-center">
         <Link to={"/"}>
           <img src={cuberLogo} alt="Cuber logo" />
@@ -74,21 +115,21 @@ function SignUp() {
             )}
           </div>
           <div className="flex flex-col gap-3">
-            <label htmlFor="firstname" className="text-gre text-sm">
+            <label htmlFor="firstName" className="text-gre text-sm">
               Firstname
             </label>
             <div className="flex items-center">
               <input
                 className="text-bl py-1 placeholder-bl border-b-2 border-b-bl focus:outline-none w-[75%]"
-                id="firstname"
+                id="firstName"
                 type="text"
-                value={form.values.firstname}
+                value={form.values.firstName}
                 onChange={form.handleChange}
-                name="firstname"
+                name="firstName"
                 placeholder="Abraham"
                 onBlur={form.handleBlur}
               />
-              {!form.errors.firstname && form.touched.firstname ? (
+              {!form.errors.firstName && form.touched.firstName ? (
                 <div className="-ml-6">
                   <IoMdCheckmark color="#28374B" />
                 </div>
@@ -97,28 +138,28 @@ function SignUp() {
               )}
             </div>
 
-            {form.errors.firstname && form.touched.firstname ? (
-              <p className="text-red-500 text-sm">{form.errors.firstname}</p>
+            {form.errors.firstName && form.touched.firstName ? (
+              <p className="text-red-500 text-sm">{form.errors.firstName}</p>
             ) : (
               ""
             )}
           </div>
           <div className="flex flex-col gap-3">
-            <label htmlFor="lastname" className="text-gre text-sm">
-              Lastname
+            <label htmlFor="lastName" className="text-gre text-sm">
+              lastName
             </label>
             <div className="flex items-center">
               <input
                 className="text-bl py-1 placeholder-bl border-b-2 border-b-bl focus:outline-none w-[75%]"
-                id="lastname"
+                id="lastName"
                 type="text"
-                value={form.values.lastname}
+                value={form.values.lastName}
                 onChange={form.handleChange}
-                name="lastname"
+                name="lastName"
                 placeholder="Joshua"
                 onBlur={form.handleBlur}
               />
-              {!form.errors.lastname && form.touched.lastname ? (
+              {!form.errors.lastName && form.touched.lastName ? (
                 <div className="-ml-6">
                   <IoMdCheckmark color="#28374B" />
                 </div>
@@ -127,8 +168,8 @@ function SignUp() {
               )}
             </div>
 
-            {form.errors.lastname && form.touched.lastname ? (
-              <p className="text-red-500 text-sm">{form.errors.lastname}</p>
+            {form.errors.lastName && form.touched.lastName ? (
+              <p className="text-red-500 text-sm">{form.errors.lastName}</p>
             ) : (
               ""
             )}

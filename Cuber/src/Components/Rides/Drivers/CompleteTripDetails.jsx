@@ -24,7 +24,10 @@ function CompleteTripDetails() {
       <Navigation link={-1} name={"Please complete your trip details"} />
 
       <div className="">
-        <form action="" className="flex flex-col gap-6 mt-12">
+        <form
+          action=""
+          className="flex flex-col gap-6 mt-12"
+          onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-2 w-full">
             <label htmlFor="price">Price</label>
             <div className="flex">
@@ -40,7 +43,9 @@ function CompleteTripDetails() {
               <p className="-ml-12">naira</p>
             </div>
             {formik.errors.price && formik.touched.price ? (
-              <small className="text-red-500 text-sm"></small>
+              <small className="text-red-500 text-sm">
+                {formik.errors.price}
+              </small>
             ) : (
               ""
             )}
@@ -61,7 +66,9 @@ function CompleteTripDetails() {
               <p className="-ml-12">naira</p>
             </div>
             {formik.errors.passenger_size && formik.touched.passenger_size ? (
-              <small className="text-red-500 text-sm"></small>
+              <small className="text-red-500 text-sm">
+                {formik.errors.passenger_size}
+              </small>
             ) : (
               ""
             )}
