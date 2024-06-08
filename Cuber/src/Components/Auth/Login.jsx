@@ -42,7 +42,8 @@ function Login() {
             theme: "light",
             transition: Flip,
           });
-          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("token", res.data.accessToken);
+          localStorage.setItem("refreshToken", res.data.refreshToken);
           setTimeout(() => setNav(true), "2000");
         })
         .catch(async (err) => {

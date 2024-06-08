@@ -4,57 +4,67 @@ import { Navigate } from "react-router-dom";
 import { Flip, ToastContainer, toast } from "react-toastify";
 
 function Logout() {
-  const [nav, setNav] = useState(false);
-  const [error, setError] = useState(false);
+  const [navigate, setNavigate] = useState(null);
   const url = import.meta.env.VITE_URL;
+
   useEffect(() => {
     const logout = async () => {
-      const config = {
-        headers: {
-          "content-Type": "application/json",
-          authorization: localStorage.getItem("token"),
-        },
-      };
-      await axios
-        .get(`${url}/logout`, config)
-        .then(async (res) => {
-          await toast.success(res.data.msg, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Flip,
-          });
-          localStorage.removeItem("token");
-          setTimeout(() => setNav(true), "2000");
-        })
-        .catch(async (err) => {
-          toast.error("Please login", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Flip,
-          });
-          setTimeout(() => setError(true), "2000");
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+        };
+
+        const response = await axios.get(`${url}/logout`, config);
+
+        toast.success(response.data.msg, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Flip,
         });
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        setNavigate("/");
+        // setTimeout(() => , 2000);
+      } catch (error) {
+        toast.error("Please login", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Flip,
+        });
+
+        setNavigate("/login");
+        // setTimeout(() => , 2000);
+      }
     };
+
     logout();
-  }, []);
-  if (error) return <Navigate to={"/login"} />;
+  }, [url]);
+
+  if (navigate) {
+    return <Navigate to={navigate} />;
+  }
+
   return (
     <div>
       <ToastContainer />
-      {nav ? <Navigate to={"/"} /> : ""}
     </div>
   );
 }
+
 export default Logout;
