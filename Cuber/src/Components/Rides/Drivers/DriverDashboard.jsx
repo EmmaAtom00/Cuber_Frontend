@@ -8,11 +8,13 @@ import man from "../../../assets/man.png";
 import man1 from "../../../assets/man1.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { UnreadNotification } from "../../../util";
 
 function DriverDashboard() {
   const url = import.meta.env.VITE_URL;
   const [user, setUser] = useState({});
   const [error, setError] = useState();
+  const [unRead, setUnRead] = useState();
   const config = {
     headers: {
       "content-Type": "application/json",
@@ -29,6 +31,8 @@ function DriverDashboard() {
         .catch((err) => {
           setError(err.response.status);
         });
+      const read = await UnreadNotification();
+      setUnRead(read);
     };
     getUser();
   }, []);
@@ -59,10 +63,17 @@ function DriverDashboard() {
   return (
     <div className="p-[2em]">
       <div className="flex justify-between">
-        <div>
+        <div className="relative">
           <Link to={"/notification"}>
             <IoMdNotificationsOutline size={25} />
           </Link>
+          {unRead > 0 ? (
+            <div className="bg-red-500 h-[15px] w-[15px] rounded-full flex justify-center items-center absolute top-0 right-0 text-[9px] text-white">
+              <p>{unRead}</p>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div className="flex gap-2">
           <IoWalletOutline size={25} />

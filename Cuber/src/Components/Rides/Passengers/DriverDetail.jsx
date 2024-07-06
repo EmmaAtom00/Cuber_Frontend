@@ -63,7 +63,7 @@ function DriverDetail() {
             return (
               <div className="grid grid-cols-2" key={id}>
                 <p className="font-bold">{name}</p>
-                <p className="font-thin">{details}</p>
+                <p className="">{details}</p>
               </div>
             );
           })}

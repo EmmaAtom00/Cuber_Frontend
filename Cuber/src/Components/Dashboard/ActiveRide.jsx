@@ -4,6 +4,7 @@ import { Flip, ToastContainer, toast } from "react-toastify";
 import Navigation from "../Navigation";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Option from "../Option";
+import { MdDeleteOutline } from "react-icons/md";
 
 function History() {
   const [activeRide, setActive] = useState({});
@@ -49,8 +50,8 @@ function History() {
       <Navigation link={-1} name={"Active Rides"} />
       {activeRide.email ? (
         <div>
-          <Link to={"/choose-a-ride"}>
-            <div className="p-4 shadow-md gap-4 my-6 mx-4 flex flex-col items-center">
+          <div className="p-4 relative shadow-md gap-2 my-6 mx-4 flex flex-col items-start">
+            <Link to={"/choose-a-ride"}>
               <h3>
                 {activeRide.firstName} {activeRide.lastName}
               </h3>
@@ -59,13 +60,13 @@ function History() {
                 <b>Trip: </b>
                 {activeRide.pickup} - {activeRide.destination}
               </p>
+            </Link>
+            <div
+              className="text-white bg-red-500 absolute right-0 py-2 block cursor-pointer px-2 rounded-md"
+              onClick={() => deleteRide()}>
+              <MdDeleteOutline />
             </div>
-          </Link>
-          <button
-            className="text-white bg-red-500 py-3 px-4 m-auto block rounded-md"
-            onClick={() => deleteRide()}>
-            Delete Ride
-          </button>
+          </div>
         </div>
       ) : (
         <div className="p-4 shadow-md gap-4 my-6 mx-4 flex flex-col items-center">
