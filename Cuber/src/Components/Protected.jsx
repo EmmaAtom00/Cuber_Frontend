@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./Spinner.css"; // Import the spinner CSS
 
 function Protected() {
   const url = import.meta.env.VITE_URL;
@@ -19,10 +20,10 @@ function Protected() {
     }
 
     axios
-      .get(`${url}/protects`, {
+      .get(`/protects`, {
         headers: {
           "Content-Type": "application/json",
-          authorization: token,
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -41,7 +42,11 @@ function Protected() {
   }, [navigate]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading indicator while checking auth
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+      </div>
+    );
   }
 
   return (

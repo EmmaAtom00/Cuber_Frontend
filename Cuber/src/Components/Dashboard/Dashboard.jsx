@@ -1,5 +1,5 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { IoWalletOutline } from "react-icons/io5";
+import { IoAttachOutline, IoWalletOutline } from "react-icons/io5";
 import { CiUser } from "react-icons/ci";
 import { GoHistory } from "react-icons/go";
 import { Link, Navigate } from "react-router-dom";
@@ -64,7 +64,9 @@ function Dashboard() {
     <div className="p-[2em]">
       <div className="flex justify-between">
         <div>
-          <IoMdNotificationsOutline size={25} />
+          <Link to={"/notification"}>
+            <IoMdNotificationsOutline size={25} />
+          </Link>
         </div>
         <div className="flex gap-2">
           <IoWalletOutline size={25} />
@@ -100,13 +102,17 @@ function Dashboard() {
             );
           })}
         </div>
-        <p className="text-gr underline text-right mt-4">View all</p>
+        <p className="text-gr underline text-right mt-4">
+          <Link to={"/active-ride"}>Active Rides</Link>
+        </p>
       </div>
       <div className="flex justify-end">
-        {/* <div className="flex gap-2 items-center">
-          <IoChatbubbleEllipsesOutline size={25} />
-          <p>Inbox</p>
-        </div> */}
+        {/* <Link to={"/active-ride"}>
+          <div className="flex gap-2 items-center">
+            <IoAttachOutline size={25} />
+            <p>Active rides</p>
+          </div>
+        <Link to={"/active-ride"}> */}
         <div className="flex gap-2 items-center">
           <GoHistory size={25} />
           <p>History</p>

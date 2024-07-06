@@ -2,9 +2,18 @@ import { useFormik } from "formik";
 import Navigation from "../../Navigation";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { Flip, toast } from "react-toastify";
+import axios from "axios";
 
 function CompleteTripDetails() {
   const navigate = useNavigate();
+  const url = import.meta.env.VITE_URL;
+  const config = {
+    headers: {
+      "content-type": "application/json",
+      authorization: localStorage.getItem("token"),
+    },
+  };
   const formik = useFormik({
     initialValues: {
       price: "",
@@ -12,11 +21,39 @@ function CompleteTripDetails() {
     },
     validationSchema: Yup.object({
       price: Yup.number().required().min(0, "price cannot be less than 0"),
-      passenger_size: Yup.number().required(),
+      passenger_size: Yup.number()
+        .required()
+        .max(20, "passengers cannot exceed 20"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
-      navigate("/Trip-created");
+      await axios
+        .post(`${url}/user/createRide`, values, config)
+        .then((res) => {
+          console.log(res);
+          navigate("/Trip-created");
+        })
+        .catch(async (err) => {
+          console.log(err.response.data);
+          await toast.error(err.response.data.msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Flip,
+          });
+          if (err.response.status == 300)
+            return setTimeout(
+              () => navigate("/Complete-driver-trip-details"),
+              "2000"
+            );
+        });
+      // /user/completeDriverDetails
+      // ;
     },
   });
   return (

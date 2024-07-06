@@ -9,15 +9,19 @@ import {
   NotFound,
   Protected,
   SignUp,
+  ViewRide,
 } from "./Components";
 import { BiError } from "react-icons/bi";
 import { Route, Routes } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { AnimatePresence } from "framer-motion";
 import {
+  ActiveRide,
   Dashboard,
   DashboardOption,
   Logout,
+  Notification,
+  Notify,
   Profile,
 } from "./Components/Dashboard";
 import {
@@ -37,6 +41,7 @@ import {
 import {
   Accept,
   AcceptMessage,
+  Inbox,
   NewRequest,
   Reject,
   RejectMessage,
@@ -67,16 +72,20 @@ function App() {
               <Route path="Profile" element={<Profile />} />
               <Route path="Find-a-ride" element={<SelectLocation />} />
               <Route path="Choose-a-ride" element={<ChooseDriver />} />
-              <Route path="Driver-details" element={<DriverDetail />} />
+              <Route path="Driver-details/:id" element={<DriverDetail />} />
               <Route path="Driver-dashboard" element={<DriverDashboard />} />
               <Route path="Pending-approval" element={<PendingApproval />} />
               <Route path="Driver-trip-details" element={<TripDetails />} />
               <Route path="Trip-created" element={<Submitted />} />
-              <Route path="Passenger-request" element={<NewRequest />} />
+              <Route path="Passenger-request/:id" element={<NewRequest />} />
               <Route path="Accept-request" element={<Accept />} />
               <Route path="Accept" element={<AcceptMessage />} />
               <Route path="Reject" element={<RejectMessage />} />
               <Route path="Reject-request" element={<Reject />} />
+              <Route path="Active-ride" element={<ActiveRide />} />
+              <Route path="Inbox" element={<Inbox />} />
+              <Route path="Notification" element={<Notify />} />
+              <Route path="View-Ride" element={<ViewRide />} />
               <Route
                 path="Complete-driver-trip-details"
                 element={<CompleteTripDetails />}

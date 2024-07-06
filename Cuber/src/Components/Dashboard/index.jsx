@@ -4,3 +4,5 @@ export { default as Profile } from "./Profile";
 export { default as Notification } from "./Notification";
 export { default as Wallet } from "./Wallet";
 export { default as DashboardOption } from "./DashboardOption";
+export { default as ActiveRide } from "./ActiveRide";
+export { default as Notify } from "./Notification";

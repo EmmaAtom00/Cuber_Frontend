@@ -13,7 +13,7 @@ function Option({ message, func }) {
           </Link>
 
           <button
-            onClick={func}
+            onClick={() => func}
             className="bg-gr text-white py-3 px-8 rounded-md w-[50%]">
             Yes
           </button>

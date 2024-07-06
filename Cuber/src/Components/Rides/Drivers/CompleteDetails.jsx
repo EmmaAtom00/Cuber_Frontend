@@ -1,10 +1,42 @@
 import { useFormik } from "formik";
 import Navigation from "../../Navigation";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function CompleteDetails() {
   const navigate = useNavigate();
+  const url = import.meta.env.VITE_URL;
+  const config = {
+    headers: {
+      "content-type": "application/json",
+      authorization: localStorage.getItem("token"),
+    },
+  };
+  const [pending, setPending] = useState(false);
+  const [approved, setApproved] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const approved = async () => {
+      await axios
+        .get(`${url}/user/approve`, config)
+        .then((res) => {
+          console.log(res);
+          if (res.data.approved) setApproved(true);
+          // return navigate("/Driver-trip-details")
+          if (res.data.car_type) setPending(true);
+          // return navigate("/pending-approval")
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => setLoading(false));
+    };
+    approved();
+  }, []);
   const formik = useFormik({
     initialValues: {
       nin: "",
@@ -20,13 +52,33 @@ function CompleteDetails() {
         "Vehicle registration number is a required field"
       ),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
-      navigate("/pending-approval");
+      await axios
+        .post(`${url}/user/completeDriverDetails`, values, config)
+        .then((res) => {
+          console.log(res);
+          navigate("/pending-approval");
+        })
+        .catch(async (err) => {
+          await toast.error(err.response.data.msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Flip,
+          });
+        });
     },
   });
-  return (
+
+  const page = (
     <div className="p-[2em]">
+      <ToastContainer />
       <Navigation link={-1} name={"Please complete your driver details"} />
       <div className="flex flex-col gap-4">
         <form
@@ -103,6 +155,15 @@ function CompleteDetails() {
         </form>
       </div>
     </div>
+  );
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator while checking auth
+  }
+
+  const pend = pending ? <Navigate to={"/pending-approval"} /> : page;
+  return (
+    <div>{approved ? <Navigate to={"/Driver-trip-details"} /> : pend}</div>
   );
 }
 

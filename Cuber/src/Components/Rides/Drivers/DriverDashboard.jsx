@@ -60,7 +60,9 @@ function DriverDashboard() {
     <div className="p-[2em]">
       <div className="flex justify-between">
         <div>
-          <IoMdNotificationsOutline size={25} />
+          <Link to={"/notification"}>
+            <IoMdNotificationsOutline size={25} />
+          </Link>
         </div>
         <div className="flex gap-2">
           <IoWalletOutline size={25} />
@@ -97,14 +99,16 @@ function DriverDashboard() {
             );
           })}
         </div>
-        <p className="text-gr underline text-right mt-4">View all</p>
+        <p className="text-gr underline text-right mt-4">View Ride</p>
       </div>
 
       <div className="flex justify-between">
-        <div className="flex gap-2 items-center">
-          <IoChatbubbleEllipsesOutline size={25} />
-          <p>Inbox</p>
-        </div>
+        <Link to={"/inbox"}>
+          <div className="flex gap-2 items-center">
+            <IoChatbubbleEllipsesOutline size={25} />
+            <p>Inbox</p>
+          </div>
+        </Link>
         <div className="flex gap-2 items-center">
           <GoHistory size={25} />
           <p>History</p>
