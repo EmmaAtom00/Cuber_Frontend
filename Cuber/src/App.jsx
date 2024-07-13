@@ -67,7 +67,7 @@ function App() {
             <Route path="/SignUp" element={<SignUp />} />
             <Route path="*" element={<NotFound />} />
             <Route element={<Protected />}>
-              <Route path="Logout" element={<Logout />} />
+              {/* <Route path="Logout" element={<Logout />} /> */}
               <Route path="Dashboard" element={<DashboardOption />} />
               <Route path="Profile" element={<Profile />} />
               <Route path="Find-a-ride" element={<SelectLocation />} />

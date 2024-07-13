@@ -7,17 +7,24 @@ import man from "../../assets/man.png";
 import man1 from "../../assets/man1.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { UnreadNotification } from "../../util";
+import { FaSpinner } from "react-icons/fa";
 
 function Dashboard() {
   const url = import.meta.env.VITE_URL;
   const [user, setUser] = useState({});
   const [error, setError] = useState();
+  const [unRead, setUnRead] = useState();
+  const [loading, setLoading] = useState(false);
   const config = {
     headers: {
       "content-Type": "application/json",
       authorization: localStorage.getItem("token"),
     },
   };
+  const read = UnreadNotification()
+    .then((res) => setUnRead(res))
+    .catch();
   useEffect(() => {
     const getUser = async () => {
       await axios
@@ -32,6 +39,8 @@ function Dashboard() {
     getUser();
   }, []);
   async function changeMode() {
+    setLoading(true);
+    console.log(loading);
     axios
       .get(`http://localhost:4000/user/switch`, {
         headers: {
@@ -47,7 +56,8 @@ function Dashboard() {
       .catch((err) => {
         // console.log(err.response.data.msg);
       });
-    window.location.reload(false);
+
+    // window.location.reload(false);
   }
   const news = [
     {
@@ -63,10 +73,17 @@ function Dashboard() {
   return (
     <div className="p-[2em]">
       <div className="flex justify-between">
-        <div>
+        <div className="relative">
           <Link to={"/notification"}>
             <IoMdNotificationsOutline size={25} />
           </Link>
+          {unRead > 0 ? (
+            <div className="bg-red-500 h-[15px] w-[15px] rounded-full flex justify-center items-center absolute top-0 right-0 text-[9px] text-white">
+              <p>{unRead}</p>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div className="flex gap-2">
           <IoWalletOutline size={25} />
@@ -126,8 +143,9 @@ function Dashboard() {
         </Link>
         <button
           onClick={() => changeMode()}
-          className="bg-gr text-white py-4 px-20 rounded-lg">
-          Switch to a driver
+          className="bg-gr flex items-center gap-2 text-white py-4 px-20 rounded-lg">
+          {loading ? <FaSpinner className="animate-spin" /> : ""}Switch to a
+          driver
         </button>
       </div>
     </div>

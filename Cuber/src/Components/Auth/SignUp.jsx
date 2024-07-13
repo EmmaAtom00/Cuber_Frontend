@@ -49,6 +49,7 @@ function SignUp() {
           setTimeout(() => setNav(true), "4000");
         })
         .catch(async (err) => {
+          err.message ? toast.err(err.message) : "";
           await toast.error(err.response.data.msg, {
             position: "top-center",
             autoClose: 3000,

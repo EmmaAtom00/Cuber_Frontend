@@ -9,12 +9,14 @@ import man1 from "../../../assets/man1.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { UnreadNotification } from "../../../util";
+import { FaSpinner } from "react-icons/fa";
 
 function DriverDashboard() {
   const url = import.meta.env.VITE_URL;
   const [user, setUser] = useState({});
   const [error, setError] = useState();
   const [unRead, setUnRead] = useState();
+  const [loading, setLoading] = useState(false);
   const config = {
     headers: {
       "content-Type": "application/json",
@@ -37,6 +39,7 @@ function DriverDashboard() {
     getUser();
   }, []);
   async function changeMode() {
+    setLoading(true);
     axios
       .get(`${url}/user/switch`, {
         headers: {
@@ -48,7 +51,7 @@ function DriverDashboard() {
         // mode = res.response.driver;
       })
       .catch((err) => {});
-    window.location.reload(false);
+    // window.location.reload(false);
   }
   const news = [
     {
@@ -110,7 +113,9 @@ function DriverDashboard() {
             );
           })}
         </div>
-        <p className="text-gr underline text-right mt-4">View Ride</p>
+        <Link to={"/view-ride"}>
+          <p className="text-gr underline text-right mt-4">View Ride</p>
+        </Link>
       </div>
 
       <div className="flex justify-between">
@@ -133,8 +138,9 @@ function DriverDashboard() {
         </Link>
         <button
           onClick={() => changeMode()}
-          className="bg-gr text-white py-4 px-20 rounded-lg">
-          Switch to a Passenger
+          className="bg-gr flex items-center text-white py-4 px-20 rounded-lg">
+          {loading ? <FaSpinner className="animate-spin" /> : ""} Switch to a
+          Passenger
         </button>
       </div>
     </div>

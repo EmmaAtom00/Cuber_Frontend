@@ -30,7 +30,7 @@ function SelectLocation() {
   const mapRef = useRef();
   const url = import.meta.env.VITE_URL;
 
-  useEffect(() => {
+  const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -39,41 +39,48 @@ function SelectLocation() {
             longitude: position.coords.longitude,
           });
           setError(null);
+          toast.success("Location fetched successfully!");
         },
         (error) => {
           setError(error.message);
+          toast.error(error.message);
         },
         {
           enableHighAccuracy: true,
-          timeout: 5000,
+          timeout: 3000,
           maximumAge: 0,
         }
       );
     } else {
       setError("Geolocation is not supported by this browser.");
+      toast.error("Geolocation is not supported by this browser.");
     }
+  };
+
+  useEffect(() => {
+    handleGetLocation();
   }, []);
 
   useEffect(() => {
     if (mapRef.current) {
       const map = mapRef.current.getMap();
 
-      const geocoder = new MapboxGeocoder({
-        accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
-        mapboxgl: mapRef.current,
-        marker: false,
-        placeholder: "Search for locations",
-        countries: "NG", // Limit search results to Nigeria
-        bbox: [2.676932, 4.240594, 14.677018, 13.885645], // Nigeria bounding box
-        // types: "address", // Restrict results to addresses (e.g., streets)
-      });
-
       // const geocoder = new MapboxGeocoder({
       //   accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
       //   mapboxgl: mapRef.current,
       //   marker: false,
       //   placeholder: "Search for locations",
+      //   countries: "NG", // Limit search results to Nigeria
+      //   bbox: [2.676932, 4.240594, 14.677018, 13.885645], // Nigeria bounding box
+      //   // types: "address", // Restrict results to addresses (e.g., streets)
       // });
+
+      const geocoder = new MapboxGeocoder({
+        accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
+        mapboxgl: mapRef.current,
+        marker: false,
+        placeholder: "Search for locations",
+      });
 
       map.addControl(geocoder);
 
@@ -156,7 +163,7 @@ function SelectLocation() {
 
   return (
     <div className="relative">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="p-[2em]">
         <div className="flex items-center justify-center relative">
           <Link to={"/dashboard"} className="absolute left-0 top-0">
@@ -274,6 +281,11 @@ function SelectLocation() {
             onClick={formik.handleSubmit}
             className="bg-gr text-white py-3 rounded-md mt-8 w-[60%] mx-auto">
             Proceed
+          </button>
+          <button
+            onClick={handleGetLocation}
+            className="bg-bl text-white p-2 w-[60%] mx-auto rounded-md shadow-lg">
+            Get My Location
           </button>
         </div>
       )}

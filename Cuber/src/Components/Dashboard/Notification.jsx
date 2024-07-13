@@ -20,7 +20,7 @@ function Notification() {
     try {
       const res = await axios.get(`${url}/user/notification`, config);
       if (Array.isArray(res.data.notifications)) {
-        setNotify(res.data.notifications);
+        setNotify(res.data.notifications.reverse());
       } else {
         setNotify([]);
       }
@@ -46,6 +46,14 @@ function Notification() {
   useEffect(() => {
     fetchNotifications();
   }, [fetchNotifications]);
+  useEffect(() => {
+    const readNotification = async () => {
+      const read = await axios.get(`${url}/user/readNotification`, config);
+      console.log(read);
+      return read;
+    };
+    const read = readNotification();
+  }, []);
 
   return (
     <div className="p-[2em]">

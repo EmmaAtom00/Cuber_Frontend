@@ -13,6 +13,7 @@ function Protected() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const url = import.meta.env.VITE_URL;
     if (!token) {
       toast.error("No token found, please log in.", { position: "top-center" });
       navigate("/login");
@@ -20,7 +21,7 @@ function Protected() {
     }
 
     axios
-      .get(`/protects`, {
+      .get(`${url}/protects`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
@@ -30,10 +31,11 @@ function Protected() {
         setAuth(true);
       })
       .catch(async (err) => {
-        await toast.error(err.response?.data?.msg || "Authentication failed", {
+        console.log(err.response.data.msg);
+        err.message && !err.response ? toast.error("failed to fetch") : "";
+        toast.error(err.response?.data?.msg || "Authentication failed", {
           position: "top-center",
         });
-        console.log(err);
         navigate("/login");
       })
       .finally(() => {

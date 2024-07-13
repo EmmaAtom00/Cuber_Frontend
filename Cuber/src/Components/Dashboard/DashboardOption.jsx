@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 function DashboardOption() {
   let [mode, setMode] = useState();
   const url = import.meta.env.VITE_URL;
-  useEffect(() => {
+  // useEffect(() => {
+
+  // }, []);
+
+  const checkMode = () => {
     axios
       .get(`${url}/user/findMode`, {
         headers: {
@@ -22,7 +26,9 @@ function DashboardOption() {
       .catch((err) => {
         // console.log(err);
       });
-  }, []);
+  };
+
+  checkMode();
   return <div>{mode ? <DriverDashboard /> : <Dashboard />}</div>;
 }
 export default DashboardOption;

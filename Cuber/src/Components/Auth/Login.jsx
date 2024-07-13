@@ -9,11 +9,34 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import axios from "axios";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../Spinner.css";
 
 function Login() {
   const [nav, setNav] = useState(false);
+  const [auth, setAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
   const url = import.meta.env.VITE_URL;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkForLoggedIn = async () => {
+      axios
+        .get(`${url}/protects`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          // toast.success("You're logged in");
+          console.log(res);
+          setAuth(true);
+        })
+        .catch((err) => console.log(err))
+        .finally(setLoading(false));
+    };
+    checkForLoggedIn();
+  }, [url]);
 
   const form = useFormik({
     initialValues: {
@@ -47,17 +70,9 @@ function Login() {
           setTimeout(() => setNav(true), "2000");
         })
         .catch(async (err) => {
-          await toast.error(err.response.data.msg, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Flip,
-          });
+          // console.log(err);
+          err.message && !err.response ? toast.error("failed to fetch") : "";
+          err.response.data.msg ? toast.error(err.response.data.msg) : "";
         });
     },
   });
@@ -69,6 +84,15 @@ function Login() {
       setPassword("password");
     }
   };
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+  if (auth && localStorage.getItem("token"))
+    return <Navigate to={"/dashboard"} />;
   if (nav) return <Navigate to={"/dashboard"} />;
   return (
     <div className="p-[2em]">
