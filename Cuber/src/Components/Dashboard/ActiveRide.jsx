@@ -18,6 +18,9 @@ function History() {
       authorization: localStorage.getItem("token"),
     },
   };
+
+  // Reload the page every 15 seconds
+
   const url = import.meta.env.VITE_URL;
   const navigate = useNavigate();
   const [message, setMessage] = useState();
@@ -44,19 +47,24 @@ function History() {
     return;
   };
 
-  useState(() => {
-    const checkRideIfAccepted = async () => {
-      try {
-        const result = await axios.get(`${url}/user/acceptedRide`, config);
-        setMessage(result.data.msg);
-        setAccepted(true);
-      } catch (error) {
-        // console.log(error);
-        // navigate("/choose-a-ride");
-      }
-    };
+  const checkRideIfAccepted = async () => {
+    try {
+      const result = await axios.get(`${url}/user/acceptedRide`, config);
+      setMessage(result.data.msg);
+      setAccepted(true);
+    } catch (error) {
+      toast.error("an error occurred");
+      // console.log(error);
+      // navigate("/choose-a-ride");
+    }
+  };
+  if (accepted) {
+    setInterval(function () {
+      location.reload();
+    }, 15000);
     checkRideIfAccepted();
-  }, []);
+  }
+  useState(() => {}, []);
 
   useEffect(() => {
     const data = async () => {
@@ -67,14 +75,18 @@ function History() {
           // console.log(activeRide);
         })
         .catch((err) => {
-          toast.error(err.response.data.msg);
+          // toast.error(err.response.data.msg);
         });
     };
     data();
   }, []);
 
   const completeRide = () => {
-    axios.get(`${url}/completeRide`, config).then().catch();
+    axios
+      .get(`${url}/completeRide`, config)
+      .then((res) => toast.success("Ride complete"))
+      .catch();
+    window.location.reload(false);
   };
 
   const deleteRide = () => {

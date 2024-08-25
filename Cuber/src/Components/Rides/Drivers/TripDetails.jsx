@@ -30,10 +30,38 @@ function SelectLocation() {
   const mapRef = useRef();
   const url = import.meta.env.VITE_URL;
 
+  // const handleGetLocation = () => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         setLocation({
+  //           latitude: position.coords.latitude,
+  //           longitude: position.coords.longitude,
+  //         });
+  //         setError(null);
+  //         toast.success("Location fetched successfully!");
+  //       },
+  //       (error) => {
+  //         setError(error.message);
+  //         toast.error(error.message);
+  //       },
+  //       {
+  //         enableHighAccuracy: true,
+  //         timeout: 3000,
+  //         maximumAge: 0,
+  //       }
+  //     );
+  //   } else {
+  //     setError("Geolocation is not supported by this browser.");
+  //     toast.error("Geolocation is not supported by this browser.");
+  //   }
+  // };
+
   const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          // Set location from position
           setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -42,19 +70,58 @@ function SelectLocation() {
           toast.success("Location fetched successfully!");
         },
         (error) => {
-          setError(error.message);
-          toast.error(error.message);
+          // Handle different error scenarios
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              setError("User denied the request for Geolocation.");
+              toast.error("Permission denied for Geolocation.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setError("Location information is unavailable.");
+              toast.error("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              setError("The request to get user location timed out.");
+              toast.error("Location request timed out. Try again.");
+              break;
+            default:
+              setError("An unknown error occurred.");
+              toast.error("An unknown error occurred.");
+              break;
+          }
         },
         {
-          enableHighAccuracy: true,
-          timeout: 3000,
-          maximumAge: 0,
+          enableHighAccuracy: false, // Set to false for faster results
+          timeout: 10000, // Increase timeout to 10 seconds
+          maximumAge: 10000, // Allow cache results within 10 seconds to avoid frequent lookups
         }
       );
     } else {
       setError("Geolocation is not supported by this browser.");
       toast.error("Geolocation is not supported by this browser.");
     }
+  };
+
+  // Fallback function for IP-based geolocation
+  const handleIpGeolocationFallback = async () => {
+    try {
+      const response = await axios.get("https://ipapi.co/json/");
+      if (response.data) {
+        setLocation({
+          latitude: response.data.latitude,
+          longitude: response.data.longitude,
+        });
+        toast.success("Location fetched using IP geolocation.");
+      }
+    } catch (error) {
+      setError("Failed to fetch location via IP geolocation.");
+      toast.error("Failed to fetch location via IP geolocation.");
+    }
+  };
+
+  // Manual retry handler
+  const handleRetry = () => {
+    handleGetLocation();
   };
 
   useEffect(() => {
@@ -285,8 +352,14 @@ function SelectLocation() {
           <button
             onClick={handleGetLocation}
             className="bg-bl text-white p-2 w-[60%] mx-auto rounded-md shadow-lg">
-            Get My Location
+            Get My Location now
           </button>
+          {error && (
+            <div>
+              <p>Error: {error}</p>
+              <button onClick={handleRetry}>Retry</button>
+            </div>
+          )}
         </div>
       )}
     </div>

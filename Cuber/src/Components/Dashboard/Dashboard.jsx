@@ -43,7 +43,7 @@ function Dashboard() {
     setLoading(true);
     console.log(loading);
     axios
-      .get(`http://localhost:4000/user/switch`, {
+      .get(`${url}/user/switch`, {
         headers: {
           "content-Type": "application/json",
           authorization: localStorage.getItem("token"),
