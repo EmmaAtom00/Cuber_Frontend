@@ -31,6 +31,7 @@ function SelectLocation() {
   const mapRef = useRef();
   const url = import.meta.env.VITE_URL;
 
+  // Get user location on auto and a manual function to get it too
   const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -58,6 +59,7 @@ function SelectLocation() {
     }
   };
 
+  // Get user location on page lunch
   useEffect(() => {
     handleGetLocation();
   }, []);

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { UnreadNotification } from "../../util";
 import { FaSpinner } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const url = import.meta.env.VITE_URL;
@@ -54,6 +55,8 @@ function Dashboard() {
         // mode = res.data.driver;
       })
       .catch((err) => {
+        setLoading(false);
+        toast.error(err.response.data.msg);
         // console.log(err.response.data.msg);
       });
 

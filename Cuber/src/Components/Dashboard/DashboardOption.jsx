@@ -24,7 +24,7 @@ function DashboardOption() {
         setMode(res.data.driver);
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
       });
   };
 

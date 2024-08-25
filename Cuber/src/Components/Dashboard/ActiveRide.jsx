@@ -73,12 +73,16 @@ function History() {
     data();
   }, []);
 
+  const completeRide = () => {
+    axios.get(`${url}/completeRide`, config).then().catch();
+  };
+
   const deleteRide = () => {
     axios
       .get(`${url}/deletePassengerRide`, config)
       .then((res) => {
         toast.success("success");
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         toast.error("cannot delete ride");
@@ -115,18 +119,26 @@ function History() {
                 <small className="">
                   <i className="text-green-500">{message}</i>
                   <br />
-                  <small className="text-rose-500">
-                    Wait at the nearest bus stop:
-                    <div
-                      onClick={() => {
-                        setIsOpen(!isOpen);
-                        setType("delete");
-                      }}
-                      className="cursor-pointer flex items-center gap-2 text-white bg-red-500 w-fit px-1 rounded">
-                      <MdDelete />
-                      <p>Delete ride</p>
-                    </div>
-                  </small>
+                  {activeRide.requestToDrop ? (
+                    <button
+                      onClick={() => completeRide()}
+                      className="bg-gr text-white p-1 rounded">
+                      Accept drop
+                    </button>
+                  ) : (
+                    <small className="text-rose-500">
+                      Wait at the nearest bus stop:
+                      <div
+                        onClick={() => {
+                          setIsOpen(!isOpen);
+                          setType("delete");
+                        }}
+                        className="cursor-pointer flex items-center gap-2 text-white bg-red-500 w-fit px-1 rounded">
+                        <MdDelete />
+                        <p>Delete ride</p>
+                      </div>
+                    </small>
+                  )}
                 </small>
               ) : (
                 ""

@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 function SignUp() {
   const navigate = useNavigate();
   const [nav, setNav] = useState(false);
+  const url = import.meta.env.VITE_URL;
   const form = useFormik({
     initialValues: {
       email: "",
@@ -27,7 +28,7 @@ function SignUp() {
     }),
     onSubmit: async (values) => {
       const request = await axios
-        .post("http://localhost:4000/auth/signup", {
+        .post(`${url}/auth/signup`, {
           email: values.email,
           password: values.password,
           firstName: values.firstName,
@@ -49,7 +50,7 @@ function SignUp() {
           setTimeout(() => setNav(true), "4000");
         })
         .catch(async (err) => {
-          err.message ? toast.err(err.message) : "";
+          err.message ? toast.error(err.message) : "";
           await toast.error(err.response.data.msg, {
             position: "top-center",
             autoClose: 3000,

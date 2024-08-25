@@ -8,8 +8,9 @@ import man from "../../../assets/man.png";
 import man1 from "../../../assets/man1.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { UnreadNotification } from "../../../util";
+import { NoOfRequest, UnreadNotification } from "../../../util";
 import { FaSpinner } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function DriverDashboard() {
   const url = import.meta.env.VITE_URL;
@@ -17,12 +18,23 @@ function DriverDashboard() {
   const [error, setError] = useState();
   const [unRead, setUnRead] = useState();
   const [loading, setLoading] = useState(false);
+  const [noInbox, setNoInbox] = useState();
   const config = {
     headers: {
       "content-Type": "application/json",
       authorization: localStorage.getItem("token"),
     },
   };
+
+  const notify = async () => {
+    const read = await UnreadNotification();
+    setUnRead(read);
+    const num = await NoOfRequest();
+    setNoInbox(num);
+  };
+
+  notify();
+
   useEffect(() => {
     const getUser = async () => {
       await axios
@@ -33,8 +45,8 @@ function DriverDashboard() {
         .catch((err) => {
           setError(err.response.status);
         });
-      const read = await UnreadNotification();
-      setUnRead(read);
+
+      // console.log(read);
     };
     getUser();
   }, []);
@@ -50,7 +62,11 @@ function DriverDashboard() {
       .then((res) => {
         // mode = res.response.driver;
       })
-      .catch((err) => {});
+      .catch((err) => {
+        // console.log(err);
+        setLoading(false);
+        toast.error(err.response.data.msg);
+      });
     // window.location.reload(false);
   }
   const news = [
@@ -120,8 +136,17 @@ function DriverDashboard() {
 
       <div className="flex justify-between">
         <Link to={"/inbox"}>
-          <div className="flex gap-2 items-center">
-            <IoChatbubbleEllipsesOutline size={25} />
+          <div className="flex gap-2 items-center relative">
+            <div>
+              <IoChatbubbleEllipsesOutline size={25} />
+              {noInbox > 0 ? (
+                <div className="bg-red-500 h-[15px] w-[15px] rounded-full flex justify-center items-center absolute top-0 left-0 text-[9px] text-white">
+                  <p>{noInbox}</p>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
             <p>Inbox</p>
           </div>
         </Link>
@@ -138,9 +163,9 @@ function DriverDashboard() {
         </Link>
         <button
           onClick={() => changeMode()}
-          className="bg-gr flex items-center text-white py-4 px-20 rounded-lg">
-          {loading ? <FaSpinner className="animate-spin" /> : ""} Switch to a
-          Passenger
+          className="bg-gr gap-1 flex items-center text-white py-4 px-20 rounded-lg">
+          {loading ? <FaSpinner className="animate-spin" /> : ""}
+          <p>Switch to Passenger</p>
         </button>
       </div>
     </div>

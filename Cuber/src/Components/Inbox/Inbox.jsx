@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Navigation from "../Navigation";
-import { toast } from "react-hot-toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Description,
@@ -27,7 +28,7 @@ function Inbox() {
       const res = await axios.get(`${url}/user/Inbox`, config);
       setInbox(res.data.Inbox);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       toast.error("Failed to fetch inbox");
     }
   };
@@ -42,7 +43,7 @@ function Inbox() {
       fetchInbox();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to accept request");
+      toast.error(err.response.data.msg);
     }
   };
 
@@ -56,14 +57,16 @@ function Inbox() {
       toast.error("Failed to reject request");
     }
   };
-  fetchInbox();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetchInbox();
+  }, []);
 
   return (
     <div className="p-8">
       <Navigation link={-1} name="Inbox" />
       <div>
+        {/* <ToastContainer /> */}
         {inbox.length === 0 ? (
           <p>No requests found</p>
         ) : (
@@ -72,11 +75,9 @@ function Inbox() {
               <p>
                 New request from <b>{request.name}</b>
               </p>
-              <div className="flex justify-between items-center">
-                <i>
-                  <small>{request.status}</small>
-                </i>
-                <div className="grid gap-2">
+              <div className="">
+                <i>{/* <small>{request.status}</small> */}</i>
+                <div className=" flex flex-row gap-2 justify-center">
                   <button
                     onClick={() => {
                       setIsOpen(true);

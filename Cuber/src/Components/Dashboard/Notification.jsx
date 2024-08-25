@@ -58,7 +58,7 @@ function Notification() {
   return (
     <div className="p-[2em]">
       <Navigation link={-1} name={"Notification"} />
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       {notify.length === 0 ? (
         <div className="shadow-md p-4 mt-10 w-[50%] mx-auto flex flex-col justify-center items-center">
           <BiMessageRoundedError size={30} />
