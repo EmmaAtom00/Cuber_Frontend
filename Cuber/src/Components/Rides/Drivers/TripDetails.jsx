@@ -125,7 +125,7 @@ function SelectLocation() {
   };
 
   useEffect(() => {
-    handleGetLocation();
+    handleIpGeolocationFallback();
   }, []);
 
   useEffect(() => {
@@ -197,15 +197,15 @@ function SelectLocation() {
         currentLocation: location,
         destinationLocation: destination,
       };
-      console.log(dataToSend);
+      // console.log(dataToSend);
       await axios
         .post(`${url}/user/getDriverLocation`, { dataToSend }, config)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           navigate("/Complete-driver-trip-details");
         })
         .catch(async (err) => {
-          console.log(err.response.status);
+          // console.log(err.response.status);
           await toast.error(err.response.data.msg, {
             position: "top-center",
             autoClose: 5000,

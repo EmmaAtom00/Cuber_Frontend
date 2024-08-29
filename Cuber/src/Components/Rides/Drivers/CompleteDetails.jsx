@@ -24,14 +24,14 @@ function CompleteDetails() {
       await axios
         .get(`${url}/user/approve`, config)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data.approved) setApproved(true);
           // return navigate("/Driver-trip-details")
           if (res.data.car_type) setPending(true);
           // return navigate("/pending-approval")
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         })
         .finally(() => setLoading(false));
     };
@@ -53,11 +53,11 @@ function CompleteDetails() {
       ),
     }),
     onSubmit: async (values) => {
-      console.log(values);
+      // console.log(values);
       await axios
         .post(`${url}/user/completeDriverDetails`, values, config)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           navigate("/pending-approval");
         })
         .catch(async (err) => {

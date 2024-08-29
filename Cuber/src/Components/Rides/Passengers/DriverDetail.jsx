@@ -30,11 +30,11 @@ function DriverDetail() {
     axios
       .get(`${url}/user/sendRequest/${userId}`, config)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setSend(true);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }
 
@@ -43,10 +43,12 @@ function DriverDetail() {
       axios
         .get(`${url}/user/getDriverDetails/${userId}`, config)
         .then((res) => {
-          console.log(res.data.ride);
+          // console.log(res.data.ride);
           setDriver(res.data.ride);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          // console.log(err)
+        });
     };
     getUser();
   }, []);

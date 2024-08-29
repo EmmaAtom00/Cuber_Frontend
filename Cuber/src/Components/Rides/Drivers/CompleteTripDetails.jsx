@@ -26,15 +26,15 @@ function CompleteTripDetails() {
         .max(20, "passengers cannot exceed 20"),
     }),
     onSubmit: async (values) => {
-      console.log(values);
+      // console.log(values);
       await axios
         .post(`${url}/user/createRide`, values, config)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           navigate("/Trip-created");
         })
         .catch(async (err) => {
-          console.log(err.response.data);
+          // console.log(err.response.data);
           await toast.error(err.response.data.msg, {
             position: "top-center",
             autoClose: 5000,

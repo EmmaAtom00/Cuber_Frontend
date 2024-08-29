@@ -3,8 +3,8 @@ import cuberLogo from "/logo.svg";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { IoMdCheckmark } from "react-icons/io";
+import { FaRegEye, FaRegEyeSlash, FaSpinner } from "react-icons/fa";
+import { IoIosPin, IoMdCheckmark } from "react-icons/io";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import axios from "axios";
 import { Flip, ToastContainer, toast } from "react-toastify";
@@ -17,6 +17,7 @@ function Login() {
   const [loading, setLoading] = useState(true);
   const url = import.meta.env.VITE_URL;
   const navigate = useNavigate();
+  const [loadingLogin, setLoadingLogin] = useState(true);
 
   useEffect(() => {
     const checkForLoggedIn = async () => {
@@ -29,10 +30,12 @@ function Login() {
         })
         .then((res) => {
           // toast.success("You're logged in");
-          console.log(res);
+          // console.log(res);
           setAuth(true);
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          // console.log(err)
+        })
         .finally(setLoading(false));
     };
     checkForLoggedIn();
@@ -71,9 +74,11 @@ function Login() {
         })
         .catch(async (err) => {
           // console.log(err);
+          setLoadingLogin(true);
           err.message && !err.response ? toast.error("failed to fetch") : "";
           err.response.data.msg ? toast.error(err.response.data.msg) : "";
-        });
+        })
+        .finally(setLoadingLogin(false));
     },
   });
   const [password, setPassword] = useState("password");
@@ -172,7 +177,13 @@ function Login() {
               type="submit"
               className="bg-gr py-4 rounded-md text-white w-2/3 flex items-center justify-between px-8">
               Login
-              <IoIosArrowRoundForward size={30} />
+              {loadingLogin ? (
+                <IoIosArrowRoundForward size={30} />
+              ) : (
+                <div className="animate-spin">
+                  <FaSpinner />
+                </div>
+              )}
             </button>
             <small className="text-red-500 mt-2">
               Don't have an account? <Link to={"/Signup"}>Sign up here</Link>

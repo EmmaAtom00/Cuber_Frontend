@@ -41,7 +41,7 @@ function Dashboard() {
   }, []);
   async function changeMode() {
     setLoading(true);
-    console.log(loading);
+    // console.log(loading);
     axios
       .get(`${url}/user/switch`, {
         headers: {

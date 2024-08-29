@@ -3,7 +3,7 @@ import cuberLogo from "/logo.svg";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaSpinner } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import axios, { AxiosError } from "axios";
 import { Bounce, Flip, ToastContainer, toast } from "react-toastify";
@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 function SignUp() {
   const navigate = useNavigate();
   const [nav, setNav] = useState(false);
+  const [signupLoading, setSignupLogin] = useState(false);
   const url = import.meta.env.VITE_URL;
   const form = useFormik({
     initialValues: {
@@ -62,7 +63,9 @@ function SignUp() {
             theme: "light",
             transition: Flip,
           });
-        });
+          setSignupLogin(false);
+        })
+        .finally(setSignupLogin(true));
     },
   });
 
@@ -209,8 +212,15 @@ function SignUp() {
           <div className="flex flex-col items-center justify-center mt-10">
             <button
               type="submit"
-              className="bg-gr py-4 rounded-md text-white w-2/3">
-              Sign up
+              className="bg-gr py-4 rounded-md flex items-center justify-center gap-2 text-white w-2/3">
+              <p>Sign up</p>
+              {signupLoading ? (
+                <div className="animate-spin">
+                  <FaSpinner />
+                </div>
+              ) : (
+                ""
+              )}
             </button>
             <small className="text-red-500 mt-2">
               Already have an account? <Link to={"/Login"}>Login here</Link>

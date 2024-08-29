@@ -31,7 +31,7 @@ function Protected() {
         setAuth(true);
       })
       .catch(async (err) => {
-        console.log(err.response.data.msg);
+        // console.log(err.response.data.msg);
         err.message && !err.response ? toast.error("failed to fetch") : "";
         toast.error(err.response?.data?.msg || "Authentication failed", {
           position: "top-center",

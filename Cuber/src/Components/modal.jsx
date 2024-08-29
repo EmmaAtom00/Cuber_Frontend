@@ -22,7 +22,7 @@ function Modal({
         open={isOpen}
         onClose={() => {
           setIsOpen(false);
-          console.log(isOpen);
+          // console.log(isOpen);
         }}
         className="relative z-50">
         <div className="absolute top-0 inset-0 flex w-screen items-center justify-center p-4">

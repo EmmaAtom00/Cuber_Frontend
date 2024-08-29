@@ -193,7 +193,7 @@ function SelectLocation() {
       await axios
         .post(`${url}/user/selectLocation`, { dataToSend }, config)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           navigate("/Choose-a-ride");
         })
         .catch(async (err) => {

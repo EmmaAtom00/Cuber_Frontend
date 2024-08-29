@@ -8,6 +8,8 @@ function ViewRide() {
   const [details, setDetails] = useState({});
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState("");
+  const [started, setStarted] = useState(false);
+  const [dropped, setDropped] = useState(false);
   const config = {
     headers: {
       "content-type": "application/json",
@@ -19,25 +21,44 @@ function ViewRide() {
   const dropPassenger = async (email) => {
     axios
       .get(`${url}/dropPassenger/${email}`, config)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        // console.log(res)
+      })
+      .catch((err) => {
+        // console.log(err)
+      });
+    // console.log(email);
+  };
+  const startRide = () => {
+    axios
+      .get(`${url}/startRide`, config)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch();
+    window.location.reload(false);
   };
 
   const RequestStatus = (email) => {
     axios
       .get(`${url}/requestStatus/${email}`, config)
-      .then((res) => setStatus(res.data.stat))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        setStatus(res.data.stat);
+        // console.log(status);
+      })
+      .catch((err) => {
+        // console.log(err)
+      });
   };
 
   const endRide = () => {
     axios
       .get(`${url}/endRide`, config)
       .then((res) => {
-        toast.success(res.data.msg);
+        toast.success(res.data.message);
         window.location.reload(false);
       })
-      .catch((err) => toast.error(err.response.data.msg));
+      .catch((err) => toast.error(err.response.data.message));
   };
 
   const checkSuccess = (email) => {
@@ -45,18 +66,46 @@ function ViewRide() {
     axios
       .get(`${url}/checkSuccess/${email}`, config)
       .then((res) => {
-        setSuccess(res.data.success);
+        success = res.data.success;
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err)
+      });
+
+    return success;
   };
 
   useEffect(() => {
     axios
       .get(`${url}/rideDetails`, config)
-      .then((res) => setDetails(res.data.findRide))
+      .then((res) => {
+        setDetails(res.data.findRide);
+        // console.log(res.data.findRide);
+        available();
+        // checkAllRide();
+      })
       .catch();
-    // console.log(details);
   }, []);
+
+  const checkAllRide = () => {
+    axios
+      .get(`${url}/allUserDropped`, config)
+      .then((res) => {
+        setDropped(res.data.success);
+      })
+      .catch();
+  };
+  const available = () => {
+    axios
+      .get(`${url}/started`, config)
+      .then((res) => {
+        // console.log(res.data);
+        setStarted(res.data.available);
+      })
+      .catch();
+  };
+  if (details.destination) checkAllRide();
+  // console.log(dropped);
   return (
     <div className="p-[2em]">
       <Navigation link={-1} name={"Ride Details"} />
@@ -78,36 +127,49 @@ function ViewRide() {
             <b>Passengers</b>
           </p>
           {details.passengers.map((passenger, id) => {
-            const stat = checkSuccess(passenger);
-            const request = RequestStatus(passenger);
-
-            // console.log(status);
+            // const stat = checkSuccess(passenger._id);
+            // const request = RequestStatus(passenger._id);
 
             return (
               <div
                 key={id}
                 className="my-2 p-2 flex justify-between bg-slate-200">
-                <p>{passenger}</p>
+                <p>{passenger.email}</p>
                 <div>
-                  <button
+                  <p className="bg-bl/20 px-2">
+                    {passenger.success ? "Dropped" : ""}
+                  </p>
+                  {/* <button
                     onClick={() => {
-                      if (!status) dropPassenger(passenger);
+                      if (!status) dropPassenger(passenger._id);
                     }}
                     className={`${
                       success ? "" : ""
                     }bg-bl rounded text-white py-1 px-2`}>
                     {!status ? (success ? "Dropped" : "Drop") : "pending"}
-                  </button>
+                  </button> */}
                 </div>
               </div>
             );
           })}
-          <div className="flex justify-center">
-            <button
-              onClick={() => endRide()}
-              className="bg-red-400 text-white py-1 px-2 rounded-md hover:bg-red-500">
-              End Ride
-            </button>
+          <div className="flex justify-center gap-2 items-center">
+            {!started ? (
+              <button
+                onClick={() => (dropped ? endRide() : "")}
+                className={`${
+                  !dropped
+                    ? "bg-slate-300 cursor-not-allowed"
+                    : "bg-red-400 hover:bg-red-500"
+                } text-white py-1 px-2 rounded-md `}>
+                End Ride
+              </button>
+            ) : (
+              <button
+                onClick={() => startRide()}
+                className="bg-green-400 text-white py-1 px-2 rounded-md hover:bg-green-500">
+                Start Ride
+              </button>
+            )}
           </div>
         </div>
       ) : (

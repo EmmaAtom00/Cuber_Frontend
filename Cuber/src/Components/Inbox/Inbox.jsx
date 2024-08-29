@@ -10,11 +10,14 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 
 function Inbox() {
   const [inbox, setInbox] = useState([]);
   const [type, setType] = useState();
   let [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const url = import.meta.env.VITE_URL;
   const config = {
     headers: {
@@ -27,6 +30,7 @@ function Inbox() {
     try {
       const res = await axios.get(`${url}/user/Inbox`, config);
       setInbox(res.data.Inbox);
+      // console.log(inbox);
     } catch (err) {
       // console.error(err);
       toast.error("Failed to fetch inbox");
@@ -39,11 +43,11 @@ function Inbox() {
         `${url}/user/acceptRequest/${id}/${email}`,
         config
       );
-      toast.success(res.data.msg);
+      toast.success(res.data.message);
       fetchInbox();
     } catch (err) {
       console.error(err);
-      toast.error(err.response.data.msg);
+      toast.error(err.response.data.message);
     }
   };
 
@@ -68,13 +72,42 @@ function Inbox() {
       <div>
         {/* <ToastContainer /> */}
         {inbox.length === 0 ? (
-          <p>No requests found</p>
+          <p className="flex justify-center mt-4">No requests found</p>
         ) : (
           inbox.map((request, id) => (
             <div key={id} className="p-4 shadow-md mb-4">
-              <p>
-                New request from <b>{request.name}</b>
-              </p>
+              <div className="flex items-center gap-2">
+                <p>
+                  New request from <b>{request.name}</b>
+                </p>
+              </div>
+
+              <div
+                className={` flex items-center gap-1 duration-75 ease-in-out`}>
+                <small>trip details</small>
+                <div onClick={() => setOpen(!open)} className="cursor-pointer">
+                  {!open ? (
+                    <MdArrowDropDown size={20} />
+                  ) : (
+                    <MdArrowDropUp size={20} />
+                  )}
+                </div>
+              </div>
+              <div
+                className={`${
+                  !open ? "hidden" : ""
+                } shadow p-2 mb-2 bg-black/5`}>
+                <div className="flex items-center gap-1 mb-2">
+                  <p className="px-2 bg-blue-300">trip</p>
+                  <small>
+                    {request.trip.split(" ")[0]} - {request.trip.split(" ")[1]}
+                  </small>
+                </div>
+                <div className="flex items-center gap-1">
+                  <p className="px-2 bg-green-300">status</p>
+                  <small>{request.status}</small>
+                </div>
+              </div>
               <div className="">
                 <i>{/* <small>{request.status}</small> */}</i>
                 <div className=" flex flex-row gap-2 justify-center">

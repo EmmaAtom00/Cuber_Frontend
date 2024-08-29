@@ -29,19 +29,18 @@ function History() {
   let [isOpen, setIsOpen] = useState(false);
   const details = {
     title: {
-      reject: "Delete ride",
+      accept: "Drop from vehicle",
     },
     description: {
-      reject:
-        "This will permanently delete your ride, and your driver will be notified",
+      accept: "The driver will drop you here",
       verify: {
-        reject: "Are you sure you want to proceed?",
+        accept: "Are you sure you want to proceed?",
       },
     },
   };
   const button = {
-    accept: "Delete",
-    reject: "Delete",
+    accept: "accept",
+    reject: "Drop",
   };
   const handleAccept = (id, email) => {
     return;
@@ -49,22 +48,25 @@ function History() {
 
   const checkRideIfAccepted = async () => {
     try {
-      const result = await axios.get(`${url}/user/acceptedRide`, config);
-      setMessage(result.data.msg);
-      setAccepted(true);
+      axios.get(`${url}/user/acceptedRide`, config).then((result) => {
+        setMessage(result.data.message);
+        // console.log(result.data.redirect);
+        setAccepted(result.data.redirect);
+      });
     } catch (error) {
       toast.error("an error occurred");
       // console.log(error);
       // navigate("/choose-a-ride");
     }
   };
-  if (accepted) {
-    setInterval(function () {
-      location.reload();
-    }, 15000);
-    checkRideIfAccepted();
-  }
-  useState(() => {}, []);
+
+  // if (accepted) {
+  //   setInterval(function () {
+  //     location.reload();
+  //   }, 15000);
+  // }
+
+  if (activeRide.email) checkRideIfAccepted();
 
   useEffect(() => {
     const data = async () => {
@@ -72,7 +74,7 @@ function History() {
         .get(`${url}/user/activeRide`, config)
         .then((res) => {
           setActive(res.data.activeRide);
-          // console.log(activeRide);
+          // console.log(res.data.activeRide);
         })
         .catch((err) => {
           // toast.error(err.response.data.msg);
@@ -143,11 +145,11 @@ function History() {
                       <div
                         onClick={() => {
                           setIsOpen(!isOpen);
-                          setType("delete");
+                          setType("accept");
                         }}
                         className="cursor-pointer flex items-center gap-2 text-white bg-red-500 w-fit px-1 rounded">
                         <MdDelete />
-                        <p>Delete ride</p>
+                        <p>Drop here</p>
                       </div>
                     </small>
                   )}
@@ -162,7 +164,7 @@ function History() {
                   setIsOpen={setIsOpen}
                   type={type}
                   request={activeRide}
-                  handleAcceptRequest={handleAccept}
+                  handleAcceptRequest={completeRide}
                   handleRejectRequest={""}
                   details={details}
                   button={button}
